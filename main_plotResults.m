@@ -20,11 +20,11 @@ mag_earth_intensity = fscanf(fileID, 'mag_earth_intensity = %f\n', 1);
 fclose(fileID);
 fprintf('mag_earth_intensity = %.6f\n', mag_earth_intensity);
 
-% load model 
-D_tilde_inv=load('D_tilde_inv.txt');
-o_hat=load('o_hat.txt');
-R_hat=load('R_hat.txt');
-R_opt=load('R_opt.txt');
+% % load model 
+% D_tilde_inv=load('D_tilde_inv.txt');
+% o_hat=load('o_hat.txt');
+% R_hat=load('R_hat.txt');
+% R_opt=load('R_opt.txt');
 
 % load data 
 load_file_name=[cell_str{1,1},'_',num2str(lines{i}),'.txt'];
@@ -51,34 +51,40 @@ for k=1:size(x_m,1)
     z_b(k)=h_b(3);
 end
 
-% apply model
-matrix=R_hat'*D_tilde_inv;
-offset=o_hat;
-[x_hat,y_hat,z_hat]=applyModel(x_m,y_m,z_m,mag_earth_intensity,matrix,offset);
+% % apply model
+% matrix=R_hat'*D_tilde_inv;
+% offset=o_hat;
+% [x_hat,y_hat,z_hat]=applyModel(x_m,y_m,z_m,mag_earth_intensity,matrix,offset);
+
+output_data=load('output_2024-8-13-10-21-12.txt');
+x_hat=output_data(:,1);
+y_hat=output_data(:,2);
+z_hat=output_data(:,3);
+
 plotResults(x_m,y_m,z_m,x_hat,y_hat,z_hat,mag_earth_intensity);
 plotResults2(x_b,y_b,z_b,x_hat,y_hat,z_hat,mag_earth_intensity);
 
-% apply model
-matrix=R_opt'*D_tilde_inv;
-offset=o_hat;
-[x_hat,y_hat,z_hat]=applyModel(x_m,y_m,z_m,mag_earth_intensity,matrix,offset);
-plotResults(x_m,y_m,z_m,x_hat,y_hat,z_hat,mag_earth_intensity);
-plotResults2(x_b,y_b,z_b,x_hat,y_hat,z_hat,mag_earth_intensity);
+% % apply model
+% matrix=R_opt'*D_tilde_inv;
+% offset=o_hat;
+% [x_hat,y_hat,z_hat]=applyModel(x_m,y_m,z_m,mag_earth_intensity,matrix,offset);
+% plotResults(x_m,y_m,z_m,x_hat,y_hat,z_hat,mag_earth_intensity);
+% plotResults2(x_b,y_b,z_b,x_hat,y_hat,z_hat,mag_earth_intensity);
+% 
+% % apply model
+% matrix1=D_tilde_inv;
+% offset1=o_hat;
+% [x_hat1,y_hat1,z_hat1]=applyModel(x_m,y_m,z_m,mag_earth_intensity,matrix1,offset1);
+% plotResults2(x_b,y_b,z_b,x_hat1,y_hat1,z_hat1,mag_earth_intensity);
 
-% apply model
-matrix1=D_tilde_inv;
-offset1=o_hat;
-[x_hat1,y_hat1,z_hat1]=applyModel(x_m,y_m,z_m,mag_earth_intensity,matrix1,offset1);
-plotResults2(x_b,y_b,z_b,x_hat1,y_hat1,z_hat1,mag_earth_intensity);
-
-% Print calibration params
-fprintf('3D magnetometer calibration based on ellipsoid fitting');
-fprintf('\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
-fprintf('\nThe calibration equation to be implemented:') 
-fprintf('\n\t\t\t\th_hat = matrix*(h_m - offset) \nWhere,')
-fprintf('\nh_m   = Measured sensor data vector');
-fprintf('\nh_hat = Calibrated sensor data vector');
-fprintf('\n\nmatrix =\n'); disp(matrix);
-fprintf('\noffset =\n'); disp(offset);
+% % Print calibration params
+% fprintf('3D magnetometer calibration based on ellipsoid fitting');
+% fprintf('\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+% fprintf('\nThe calibration equation to be implemented:') 
+% fprintf('\n\t\t\t\th_hat = matrix*(h_m - offset) \nWhere,')
+% fprintf('\nh_m   = Measured sensor data vector');
+% fprintf('\nh_hat = Calibrated sensor data vector');
+% fprintf('\n\nmatrix =\n'); disp(matrix);
+% fprintf('\noffset =\n'); disp(offset);
 
 % end
