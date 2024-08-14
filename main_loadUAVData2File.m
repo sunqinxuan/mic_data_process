@@ -32,6 +32,10 @@ mag=table2array(data_csv(:,3));
 
 data_quspin=[timestamp,mag];
 
+mag_earth_intensity=mean(data_quspin(:,2));
+fprintf('mag_earth_intensity =');
+disp(mag_earth_intensity);
+
 %% read uav position data
 
 data_csv=readData_csv('.\data\uav0729\dji_m350rtk\PositionFused_2024-07-29-10-44-25.csv');
@@ -83,9 +87,9 @@ end
 
 data_igrf=[data_position(:,1),igrf_north,igrf_east,igrf_down];
 
-mag_earth_intensity=mean(mag_earth);
-fprintf('mag_earth_intensity =');
-disp(mag_earth_intensity);
+% mag_earth_intensity=mean(mag_earth);
+% fprintf('mag_earth_intensity =');
+% disp(mag_earth_intensity);
 
 %% time synchronization
 

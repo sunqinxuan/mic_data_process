@@ -5,23 +5,23 @@ close all
 addpath('.\data')
 addpath('.\m_IGRF')
 
-% data_original_filename = 'Flt1002_train.h5';
-% time = datenum([2020 6 20]);
-% lines={1002.02,1002.20};
+data_original_filename = 'Flt1002_train.h5';
+time = datenum([2020 6 20]);
+lines={1002.02,1002.20};
+cell_str=strsplit(data_original_filename,'_');
+load_info_file_name=[cell_str{1,1},'_',num2str(lines{1}),'_info.txt'];
+load_file_name=[cell_str{1,1},'_',num2str(lines{1}),'.txt'];
 
-time_in=[2024 7 29];
-tt=datetime(time_in);
-time_str=datestr(tt,'yyyy-mm-dd');
-
-load_file_name=['data/data_',time_str,'.txt'];
-load_info_file_name=['data/data_',time_str,'_info.txt'];
+% time_in=[2024 7 29];
+% tt=datetime(time_in);
+% time_str=datestr(tt,'yyyy-mm-dd');
+% load_file_name=['data/data_',time_str,'.txt'];
+% load_info_file_name=['data/data_',time_str,'_info.txt'];
 
 %% for i=1:size(lines,2)
 % i=1;
 
 % load data info
-% cell_str=strsplit(data_original_filename,'_');
-% load_info_file_name=[cell_str{1,1},'_',num2str(lines{i}),'_info.txt'];
 fileID = fopen(load_info_file_name, 'r');
 mag_earth_intensity = fscanf(fileID, 'mag_earth_intensity = %f\n', 1);
 fclose(fileID);
@@ -31,10 +31,9 @@ fprintf('mag_earth_intensity = %.6f\n', mag_earth_intensity);
 D_tilde_inv=load('D_tilde_inv.txt');
 o_hat=load('o_hat.txt');
 R_hat=load('R_hat.txt');
-% R_opt=load('R_opt.txt');
+R_opt=load('R_opt.txt');
 
 % load data 
-% load_file_name=[cell_str{1,1},'_',num2str(lines{i}),'.txt'];
 data=load(load_file_name);
 x_m=data(:,2);
 y_m=data(:,3);
@@ -49,11 +48,16 @@ z_n=data(:,10);
 x_b = zeros(length(x_m),1); 
 y_b = zeros(length(x_m),1); 
 z_b = zeros(length(x_m),1);
+R_NE= [0,1,0;1,0,0;0,0,-1]; % from ENU to NED;
+s=pi/180.0;
 for k=1:size(x_m,1)
     R_nb=euler2dcm(ins_roll(k),ins_pitch(k),ins_yaw(k));
+%     R_bn=R_NE*angle2dcm(ins_yaw(k)*s,ins_pitch(k)*s,ins_roll(k)*s,'ZXY');
+%     R_bn=angle2dcm(ins_yaw(k)*s,ins_pitch(k)*s,ins_roll(k)*s,'XZY');
     h_n=[x_n(k);y_n(k);z_n(k)];
-%     h_b=R_nb'*h_n;
-    h_b=h_n;
+    h_b=R_nb'*h_n;
+%     h_b=R_bn*h_n;
+%     h_b=h_n;
     x_b(k)=h_b(1);
     y_b(k)=h_b(2);
     z_b(k)=h_b(3);
@@ -73,12 +77,12 @@ offset=o_hat;
 plotResults(x_m,y_m,z_m,x_hat,y_hat,z_hat,mag_earth_intensity);
 plotResults2(x_b,y_b,z_b,x_hat,y_hat,z_hat,mag_earth_intensity);
 
-% % apply model
-% matrix=R_opt'*D_tilde_inv;
-% offset=o_hat;
-% [x_hat,y_hat,z_hat]=applyModel(x_m,y_m,z_m,mag_earth_intensity,matrix,offset);
-% plotResults(x_m,y_m,z_m,x_hat,y_hat,z_hat,mag_earth_intensity);
-% plotResults2(x_b,y_b,z_b,x_hat,y_hat,z_hat,mag_earth_intensity);
+% apply model
+matrix=R_opt'*D_tilde_inv;
+offset=o_hat;
+[x_hat,y_hat,z_hat]=applyModel(x_m,y_m,z_m,mag_earth_intensity,matrix,offset);
+plotResults(x_m,y_m,z_m,x_hat,y_hat,z_hat,mag_earth_intensity);
+plotResults2(x_b,y_b,z_b,x_hat,y_hat,z_hat,mag_earth_intensity);
 
 
 
