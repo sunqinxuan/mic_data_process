@@ -63,25 +63,33 @@ for k=1:size(x_m,1)
     z_b(k)=h_b(3);
 end
 
+figure;
+
 % apply model
 matrix1=D_tilde_inv;
 offset1=o_hat;
 [x_hat1,y_hat1,z_hat1]=applyModel(x_m,y_m,z_m,mag_earth_intensity,matrix1,offset1);
+subplot(2,3,1);
 plotResults(x_m,y_m,z_m,x_hat1,y_hat1,z_hat1,mag_earth_intensity);
+subplot(2,3,4);
 plotResults2(x_b,y_b,z_b,x_hat1,y_hat1,z_hat1,mag_earth_intensity);
 
 % apply model
 matrix=R_hat'*D_tilde_inv;
 offset=o_hat;
 [x_hat,y_hat,z_hat]=applyModel(x_m,y_m,z_m,mag_earth_intensity,matrix,offset);
+subplot(2,3,2);
 plotResults(x_m,y_m,z_m,x_hat,y_hat,z_hat,mag_earth_intensity);
+subplot(2,3,5);
 plotResults2(x_b,y_b,z_b,x_hat,y_hat,z_hat,mag_earth_intensity);
 
 % apply model
 matrix=R_opt'*D_tilde_inv;
 offset=o_hat;
 [x_hat,y_hat,z_hat]=applyModel(x_m,y_m,z_m,mag_earth_intensity,matrix,offset);
+subplot(2,3,3);
 plotResults(x_m,y_m,z_m,x_hat,y_hat,z_hat,mag_earth_intensity);
+subplot(2,3,6);
 plotResults2(x_b,y_b,z_b,x_hat,y_hat,z_hat,mag_earth_intensity);
 
 
