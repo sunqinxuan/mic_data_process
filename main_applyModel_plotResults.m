@@ -9,8 +9,9 @@ data_original_filename = 'Flt1002_train.h5';
 time = datenum([2020 6 20]);
 lines={1002.02,1002.20};
 cell_str=strsplit(data_original_filename,'_');
-load_info_file_name=[cell_str{1,1},'_',num2str(lines{1}),'_info.txt'];
-load_file_name=[cell_str{1,1},'_',num2str(lines{1}),'.txt'];
+i=2;
+load_info_file_name=[cell_str{1,1},'_',num2str(lines{i}),'_info.txt'];
+load_file_name=[cell_str{1,1},'_',num2str(lines{i}),'.txt'];
 
 % time_in=[2024 7 29];
 % tt=datetime(time_in);

@@ -8,9 +8,10 @@ addpath('.\m_IGRF')
 data_original_filename = 'Flt1002_train.h5';
 time = datenum([2020 6 20]);
 lines={1002.02,1002.20};
+output_data_file='output_2024-8-16-14-48-17.txt';
 
 %% for i=1:size(lines,2)
-i=1;
+i=2;
 
 % load data info
 cell_str=strsplit(data_original_filename,'_');
@@ -56,12 +57,15 @@ end
 % offset=o_hat;
 % [x_hat,y_hat,z_hat]=applyModel(x_m,y_m,z_m,mag_earth_intensity,matrix,offset);
 
-output_data=load('output_2024-8-13-10-21-12.txt');
+output_data=load(output_data_file);
 x_hat=output_data(:,1);
 y_hat=output_data(:,2);
 z_hat=output_data(:,3);
 
+figure;
+subplot(1,2,1);
 plotResults(x_m,y_m,z_m,x_hat,y_hat,z_hat,mag_earth_intensity);
+subplot(1,2,2);
 plotResults2(x_b,y_b,z_b,x_hat,y_hat,z_hat,mag_earth_intensity);
 
 % % apply model
