@@ -5,9 +5,21 @@ close all
 addpath('.\data')
 addpath('.\m_IGRF')
 
-data_original_filename = 'Flt1002_train.h5';
-time = datenum([2020 6 20]); 
-lines={1002.02,1002.20};
+% data_original_filename = 'Flt1002_train.h5';
+% time = datenum([2020 6 20]); 
+% lines={1002.02,1002.20,1002.14,1002.16,1002.17};
+
+% data_original_filename = 'Flt1003_train.h5';
+% time = datenum([2020 6 29]); 
+% lines={1003.02,1003.04,1003.08};
+
+% data_original_filename = 'Flt1006_train.h5';
+% time = datenum([2020 7 6]); 
+% lines={1006.04,1006.06,1006.08};
+
+data_original_filename = 'Flt1007_train.h5';
+time = datenum([2020 7 7]); 
+lines={1007.02,1007.06};
 
 anomaly_map_filename='Canada_MAG_RES_200m.hdf5';
 
@@ -19,6 +31,8 @@ for i=1:size(lines,2)
     mag_flux_x=readH5Field(data_original_filename, lines{i}, '/flux_c_x');
     mag_flux_y=readH5Field(data_original_filename, lines{i}, '/flux_c_y');
     mag_flux_z=readH5Field(data_original_filename, lines{i}, '/flux_c_z');
+    mag_op=readH5Field(data_original_filename, lines{i}, '/mag_5_uc');
+    mag_op_truth=readH5Field(data_original_filename, lines{i}, '/mag_1_uc');
     % ins computed attitude
     ins_pitch=readH5Field(data_original_filename, lines{i}, '/ins_pitch');
     ins_roll=readH5Field(data_original_filename, lines{i}, '/ins_roll');
@@ -61,10 +75,10 @@ for i=1:size(lines,2)
         error('cannot open file!');
     end
     for j=1:size(tt,1)
-        fprintf(fileID,'%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n', ...
-            tt(j),mag_flux_x(j),mag_flux_y(j),mag_flux_z(j),...
-            ins_pitch(j),ins_roll(j),ins_yaw(j),...
-            igrf_north(j),igrf_east(j),igrf_down(j));
+        fprintf(fileID,'%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n', ...
+            tt(j),mag_op(j),mag_flux_x(j),mag_flux_y(j),mag_flux_z(j),...
+            mag_op_truth(j),igrf_north(j),igrf_east(j),igrf_down(j),...
+            ins_pitch(j),ins_roll(j),ins_yaw(j));
     end
     fclose(fileID);
 
@@ -74,10 +88,10 @@ for i=1:size(lines,2)
     if fileID == -1
         error('cannot open file!');
     end
-    fprintf(fileID,'mag_earth_intensity = %f\n',mag_earth_intensity);
-    fprintf(fileID,'saved data field: \n time, flux_xyz, ins_pry, igrf_ned \n');
+%     fprintf(fileID,'mag_earth_intensity = %f\n',mag_earth_intensity);
+    fprintf(fileID,'saved data field: \n time, mag_op, flux_xyz, mag_op_truth, igrf_ned, ins_pry \n');
     fclose(fileID);
     
     % show flight trajectory on anomaly map;
-    showAnomalyMapTraj(anomaly_map_filename,map_idx_x,map_idx_y,save_file_name);
+    % showAnomalyMapTraj(anomaly_map_filename,map_idx_x,map_idx_y,save_file_name);
 end

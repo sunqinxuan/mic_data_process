@@ -7,19 +7,19 @@ addpath('.\m_IGRF')
 
 data_original_filename = 'Flt1002_train.h5';
 time = datenum([2020 6 20]);
-lines={1002.02,1002.20};
-output_data_file='output_2024-8-16-14-48-17.txt';
+lines={1002.02,1002.20,1002.14,1002.16,1002.17};
+output_data_file='output_Flt1002_1002.14.txt';
+i=3;
 
 %% for i=1:size(lines,2)
-i=2;
 
 % load data info
 cell_str=strsplit(data_original_filename,'_');
-load_info_file_name=[cell_str{1,1},'_',num2str(lines{i}),'_info.txt'];
-fileID = fopen(load_info_file_name, 'r');
-mag_earth_intensity = fscanf(fileID, 'mag_earth_intensity = %f\n', 1);
-fclose(fileID);
-fprintf('mag_earth_intensity = %.6f\n', mag_earth_intensity);
+% load_info_file_name=[cell_str{1,1},'_',num2str(lines{i}),'_info.txt'];
+% fileID = fopen(load_info_file_name, 'r');
+% mag_earth_intensity = fscanf(fileID, 'mag_earth_intensity = %f\n', 1);
+% fclose(fileID);
+% fprintf('mag_earth_intensity = %.6f\n', mag_earth_intensity);
 
 % % load model 
 % D_tilde_inv=load('D_tilde_inv.txt');
@@ -30,16 +30,20 @@ fprintf('mag_earth_intensity = %.6f\n', mag_earth_intensity);
 % load data 
 load_file_name=[cell_str{1,1},'_',num2str(lines{i}),'.txt'];
 data=load(load_file_name);
-x_m=data(:,2);
-y_m=data(:,3);
-z_m=data(:,4);
+mag_m=data(:,2);
+x_m=data(:,3);
+y_m=data(:,4);
+z_m=data(:,5);
 
-ins_pitch=data(:,5);
-ins_roll=data(:,6);
-ins_yaw=data(:,7);
-x_n=data(:,8);
-y_n=data(:,9);
-z_n=data(:,10);
+mag_n=data(:,6);
+x_n=data(:,7);
+y_n=data(:,8);
+z_n=data(:,9);
+
+ins_pitch=data(:,10);
+ins_roll=data(:,11);
+ins_yaw=data(:,12);
+
 x_b = zeros(length(x_m),1); 
 y_b = zeros(length(x_m),1); 
 z_b = zeros(length(x_m),1);
@@ -52,15 +56,18 @@ for k=1:size(x_m,1)
     z_b(k)=h_b(3);
 end
 
+mag_earth_intensity=mean(mag_n);
+fprintf('mag_earth_intensity = %.6f\n', mag_earth_intensity);
+
 % % apply model
 % matrix=R_hat'*D_tilde_inv;
 % offset=o_hat;
 % [x_hat,y_hat,z_hat]=applyModel(x_m,y_m,z_m,mag_earth_intensity,matrix,offset);
 
 output_data=load(output_data_file);
-x_hat=output_data(:,1);
-y_hat=output_data(:,2);
-z_hat=output_data(:,3);
+x_hat=output_data(:,3);
+y_hat=output_data(:,4);
+z_hat=output_data(:,5);
 
 figure;
 subplot(1,2,1);
