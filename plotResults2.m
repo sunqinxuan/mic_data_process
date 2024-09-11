@@ -1,6 +1,6 @@
 function plotResults2(x_m,y_m,z_m,x_hat,y_hat,z_hat,mag_earth_intensity)
 
-fontsize=20;
+fontsize=40;
 x_m=x_m/mag_earth_intensity;
 y_m=y_m/mag_earth_intensity;
 z_m=z_m/mag_earth_intensity;

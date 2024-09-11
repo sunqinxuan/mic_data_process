@@ -5,9 +5,9 @@ close all
 addpath('.\data')
 addpath('.\m_IGRF')
 
-% data_original_filename = 'Flt1002_train.h5';
-% time = datenum([2020 6 20]);
-% lines={1002.02,1002.20,1002.14,1002.16,1002.17};
+data_original_filename = 'Flt1002_train.h5';
+time = datenum([2020 6 20]);
+lines={1002.02,1002.20,1002.14,1002.16,1002.17};
 
 % data_original_filename = 'Flt1003_train.h5';
 % time = datenum([2020 6 29]); 
@@ -17,14 +17,13 @@ addpath('.\m_IGRF')
 % time = datenum([2020 7 6]); 
 % lines={1006.04,1006.06,1006.08};
 
-data_original_filename = 'Flt1007_train.h5';
-time = datenum([2020 7 7]); 
-lines={1007.02,1007.06};
+% data_original_filename = 'Flt1007_train.h5';
+% time = datenum([2020 7 7]); 
+% lines={1007.02,1007.06};
 
-i=2;
-folder='.\data\model_1002_02\';
+i = 4 ;
+folder='.\data\model_1006_08\';
 
-fontsize=20;
 
 cell_str=strsplit(data_original_filename,'_');
 load_info_file_name=[cell_str{1,1},'_',num2str(lines{i}),'_info.txt'];
@@ -90,7 +89,9 @@ mag_earth_intensity=mean(mag_n);
 % fprintf('mag_earth_intensity = %.6f\n', mag_earth_intensity);
 
 %%
-figure;
+figure('WindowState', 'maximized');
+
+fontsize=40;
 
 matrix=eye(3);
 offset=zeros(3,1);
@@ -125,8 +126,10 @@ subplot(1,2,2);
 plotResults2(x_b,y_b,z_b,x_hat,y_hat,z_hat,mag_earth_intensity);
 legend('地磁场矢量方向','补偿磁场矢量方向','单位球面', 'FontSize', fontsize);
 
-
+%%
 figure('Position',[100,100,1000,600]);
+
+fontsize=20;
 % subplot(1,3,1);
 % plot(res_m1,'r'); hold on;
 % plot(res_hat1*0.2,'b'); hold on;
@@ -153,3 +156,33 @@ legend('测量误差','补偿误差', 'FontSize', fontsize);
 % fprintf('\noffset =\n'); disp(offset);
 
 % end
+
+%%
+% figure('WindowState', 'maximized');
+% 
+% matrix1=D_tilde_inv;
+% offset1=o_hat;
+% [x_hat1,y_hat1,z_hat1,res_m1,res_hat1]=applyModel(x_m,y_m,z_m,mag_earth_intensity,matrix1,offset1);
+% subplot(2,3,1);
+% plotResults(x_m,y_m,z_m,x_hat1,y_hat1,z_hat1,mag_earth_intensity);
+% subplot(2,3,4);
+% plotResults2(x_b,y_b,z_b,x_hat1,y_hat1,z_hat1,mag_earth_intensity);
+% 
+% matrix=R_hat'*D_tilde_inv;
+% offset=o_hat;
+% [x_hat,y_hat,z_hat,res_m2,res_hat2]=applyModel(x_m,y_m,z_m,mag_earth_intensity,matrix,offset);
+% subplot(2,3,2);
+% plotResults(x_m,y_m,z_m,x_hat,y_hat,z_hat,mag_earth_intensity);
+% subplot(2,3,5);
+% plotResults2(x_b,y_b,z_b,x_hat,y_hat,z_hat,mag_earth_intensity);
+% 
+% matrix=R_opt'*D_tilde_inv;
+% offset=o_hat;
+% [x_hat,y_hat,z_hat,res_m3,res_hat3]=applyModel(x_m,y_m,z_m,mag_earth_intensity,matrix,offset);
+% subplot(2,3,3);
+% plotResults(x_m,y_m,z_m,x_hat,y_hat,z_hat,mag_earth_intensity);
+% subplot(2,3,6);
+% % subplot(1,2,2);
+% plotResults2(x_b,y_b,z_b,x_hat,y_hat,z_hat,mag_earth_intensity);
+% legend('地磁场矢量方向','补偿磁场矢量方向','单位球面', 'FontSize', fontsize);
+

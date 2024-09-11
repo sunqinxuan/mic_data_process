@@ -5,9 +5,9 @@ close all
 addpath('.\data')
 addpath('.\m_IGRF')
 
-% data_original_filename = 'Flt1002_train.h5';
-% time = datenum([2020 6 20]); 
-% lines={1002.02,1002.20,1002.14,1002.16,1002.17};
+data_original_filename = 'Flt1002_train.h5';
+time = datenum([2020 6 20]); 
+lines={1002.02,1002.20,1002.14,1002.16,1002.17};
 
 % data_original_filename = 'Flt1003_train.h5';
 % time = datenum([2020 6 29]); 
@@ -17,13 +17,16 @@ addpath('.\m_IGRF')
 % time = datenum([2020 7 6]); 
 % lines={1006.04,1006.06,1006.08};
 
-data_original_filename = 'Flt1007_train.h5';
-time = datenum([2020 7 7]); 
-lines={1007.02,1007.06};
+% data_original_filename = 'Flt1007_train.h5';
+% time = datenum([2020 7 7]); 
+% lines={1007.02,1007.06};
 
 anomaly_map_filename='Canada_MAG_RES_200m.hdf5';
 
-for i=1:size(lines,2)
+i = 3;
+
+%%
+% for i=1:size(lines,2)
     fprintf('\n***********printing info for line '); disp(lines{i});
     % timestamp
     tt=readH5Field(data_original_filename, lines{i}, '/tt');
@@ -93,5 +96,8 @@ for i=1:size(lines,2)
     fclose(fileID);
     
     % show flight trajectory on anomaly map;
-    % showAnomalyMapTraj(anomaly_map_filename,map_idx_x,map_idx_y,save_file_name);
-end
+%     img_traj=showAnomalyMapTraj(anomaly_map_filename,map_idx_x,map_idx_y,save_file_name);
+% end
+
+
+fprintf('\nmean(baro) = '); disp(mean(baro));
