@@ -23,7 +23,7 @@ lines={1002.02,1002.20,1002.14,1002.16,1002.17};
 
 anomaly_map_filename='Canada_MAG_RES_200m.hdf5';
 
-i = 3;
+i = 1;
 
 %%
 % for i=1:size(lines,2)
@@ -96,8 +96,12 @@ i = 3;
     fclose(fileID);
     
     % show flight trajectory on anomaly map;
-%     img_traj=showAnomalyMapTraj(anomaly_map_filename,map_idx_x,map_idx_y,save_file_name);
+    img_traj=showAnomalyMapTraj(anomaly_map_filename,map_idx_x,map_idx_y,save_file_name);
 % end
 
+%%
+fprintf('\n平均飞行高度（气压计）： '); disp(mean(baro));
 
-fprintf('\nmean(baro) = '); disp(mean(baro));
+save_file_name_mat=['data/',cell_str{1,1},'_',num2str(lines{i}),'.mat'];
+save(save_file_name_mat,"tt","lat","lon","baro","igrf_down","igrf_east","igrf_north","ins_yaw","ins_roll","ins_pitch");
+
