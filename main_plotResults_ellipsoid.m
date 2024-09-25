@@ -2,6 +2,7 @@ clc
 clear
 close all
 
+addpath('.\src')
 addpath('.\data')
 addpath('.\m_IGRF')
 

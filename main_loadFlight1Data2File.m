@@ -6,9 +6,53 @@ addpath('.\src')
 addpath('.\data')
 addpath('.\m_IGRF')
 
-data_original_filename = 'Flt1002_train.h5';
-time = datenum([2020 6 20]); 
-lines={1002.02,1002.20,1002.14,1002.16,1002.17};
+time = datenum([2024 8 14]); 
+
+%% read mag13 data
+
+data_csv=readData_csv('.\data\Flight1_0814\06_mag13\MAG13_DualChannel_data_20240814_122219.csv');
+
+tt=table2array(data_csv(:,1));
+[h,m,s] = hms(tt);
+timestamp= h.*3600+m.*60+s;
+
+x_m=table2array(data_csv(:,6));
+y_m=table2array(data_csv(:,7));
+z_m=table2array(data_csv(:,8));
+mag=table2array(data_csv(:,9));
+
+data_mag13=[timestamp,x_m,y_m,z_m,mag];
+
+%% read INS data
+
+data_csv=readData_csv('.\data\Flight1_0814\03_INS\INS_result_align0.5h_10hz_systime.csv');
+
+tt=table2array(data_csv(:,2));
+[h,m,s] = hms(tt);
+timestamp= h.*3600+m.*60+s;
+
+ins_pitch=table2array(data_csv(:,10));
+ins_roll=table2array(data_csv(:,11));
+ins_yaw=table2array(data_csv(:,12));
+
+data_ins=[timestamp,ins_pitch,ins_roll,ins_yaw];
+
+
+%%
+
+time=table2array(data_csv(:,1));
+[h,m,s] = hms(time);
+timestamp= h.*3600+m.*60+s;
+
+pitch=table2array(data_csv(:,2)); % deg
+roll=table2array(data_csv(:,3)); % deg
+yaw=table2array(data_csv(:,4)); % deg
+
+data_orientation=[timestamp,pitch,roll,yaw];
+
+% data_original_filename = 'Flt1002_train.h5';
+% time = datenum([2020 6 20]); 
+% lines={1002.02,1002.20,1002.14,1002.16,1002.17};
 
 % data_original_filename = 'Flt1003_train.h5';
 % time = datenum([2020 6 29]); 
@@ -22,9 +66,9 @@ lines={1002.02,1002.20,1002.14,1002.16,1002.17};
 % time = datenum([2020 7 7]); 
 % lines={1007.02,1007.06};
 
-anomaly_map_filename='Canada_MAG_RES_200m.hdf5';
+% anomaly_map_filename='Canada_MAG_RES_200m.hdf5';
 
-i = 1;
+% i = 1;
 
 %%
 % for i=1:size(lines,2)

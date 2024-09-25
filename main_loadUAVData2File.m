@@ -2,6 +2,7 @@ clc
 clear
 close all
 
+addpath('.\src')
 addpath('.\data')
 time_in=[2024 7 29];
 range=1:7370;
