@@ -29,8 +29,8 @@ sum_hat=0;
 for i=1:length(x_hat)
     h_m = [x_m(i); y_m(i); z_m(i)]; 
     h_hat = [x_hat(i); y_hat(i); z_hat(i)]; 
-    residual_h_m(i)=(norm(h_m)-h_hat_mean)*0.8;%abs();
-    residual_h_hat(i)=(norm(h_hat)-h_hat_mean)*0.12;%abs();
+    residual_h_m(i)=(norm(h_m)-h_hat_mean)*1.0;%abs();
+    residual_h_hat(i)=(norm(h_hat)-h_hat_mean)*1.0;%abs();
     sum_m=sum_m+residual_h_m(i)*residual_h_m(i);
     sum_hat=sum_hat+residual_h_hat(i)*residual_h_hat(i);
 end

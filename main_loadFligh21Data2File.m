@@ -87,62 +87,102 @@ plot(data_mag13(:,1),data_mag13(:,5),'r'); hold on;
 plot(data_ins(:,1),data_ins(:,4),'g'); hold on;
 plot(data_gnss(:,1),data_gnss(:,4),'b'); hold on;
 
+%%
+
+tt_mag13=data_mag13(:,1);
+tt_ins=data_ins(:,1);
+tt_gnss=data_gnss(:,1);
+
+data_mag13_sync=zeros(size(data_gnss,1),size(data_mag13,2));
+data_ins_sync=zeros(size(data_gnss,1),size(data_ins,2));
+
+for i=1:size(data_gnss,1)
+    % mag13
+    [~, idx] = min(abs(tt_mag13 - tt_gnss(i)));
+    data_mag13_sync(i,:) = data_mag13(idx,:);
+    % ins
+    [~, idx] = min(abs(tt_ins - tt_gnss(i)));
+    data_ins_sync(i,:) = data_ins(idx,:);
+    if mod(i,100)==0
+        disp(i);
+    end
+end
 
 
-% 假设以下是两组传感器的数据
-% 第一组传感器，10 Hz 采集频率，时间间隔为 0.1 秒
-time_sensor1 = (0:0.1:10)';  % 低频传感器时间戳 (10 Hz)
-data_sensor1 = sin(time_sensor1);  % 假设的低频传感器数据
+%%
 
-% 第二组传感器，20 Hz 采集频率，时间间隔为 0.05 秒
-time_sensor2 = (0:0.05:10)';  % 高频传感器时间戳 (20 Hz)
-data_sensor2 = cos(time_sensor2);  % 假设的高频传感器数据
+% show flight trajectory on anomaly map;
+% img_traj=showAnomalyMapTraj(anomaly_map_filename,map_idx_x,map_idx_y,save_file_name);
+% end
 
-% 目标：将高频数据对齐到低频的时间轴 (time_sensor1)
 
-% 对第二个传感器数据使用插值，将其对齐到第一个传感器的时间戳上
-data_sensor2_interp = interp1(time_sensor2, data_sensor2, time_sensor1, 'linear');
+% fprintf('\n平均飞行高度（气压计）： '); disp(mean(baro));
 
-% 将对齐后的数据组合成表格
-T = table(time_sensor1, data_sensor1, data_sensor2_interp, ...
-    'VariableNames', {'Time', 'Sensor1', 'Sensor2_Aligned'});
+save_file_name_mat='data/Flight8_0909/Flight8_0909.mat';
+save(save_file_name_mat,"data_gnss","data_mag13_sync","data_ins_sync","igrf_down","igrf_east","igrf_north","mag_earth");
 
-% 显示对齐后的数据
-disp(T);
+%%
 
-% 画图比较对齐效果
+clear;
+close all;
+clc;
+
+load data\Flight8_0909\Flight8_0909.mat
+
+tt_gnss=data_gnss(:,1);
+
+% 绘图展示对齐结果
 figure;
-plot(time_sensor1, data_sensor1, 'o-', 'DisplayName', 'Sensor1 (10Hz)');
 hold on;
-plot(time_sensor2, data_sensor2, 'x-', 'DisplayName', 'Sensor2 Original (20Hz)');
-plot(time_sensor1, data_sensor2_interp, 's-', 'DisplayName', 'Sensor2 Interpolated (Aligned to 10Hz)');
+
+% 绘制10Hz数据
+plot(tt_gnss, data_gnss(:,4), '-', 'DisplayName', 'GNSS Data', 'LineWidth', 1);
+
+% 绘制对齐后的20Hz数据
+plot(tt_gnss, data_ins_sync(:,4), '-', 'DisplayName', 'Sync INS Data', 'LineWidth', 1);
+
+% 添加图例和标签
+legend show;
 xlabel('Time (s)');
-ylabel('Data');
-legend;
-title('Sensor Data Time Alignment (High Freq to Low Freq)');
+ylabel('Data Value');
+title('Syncronization of INS Data to GNSS Time Points');
+grid on;
 hold off;
 
+%%
 
+range=33746:95655;
+
+data_gnss=data_gnss(range,:);
+data_ins_sync=data_ins_sync(range,:);
+data_mag13_sync=data_mag13_sync(range,:);
+igrf_down=igrf_down(range,:);
+igrf_east=igrf_east(range,:);
+igrf_north=igrf_north(range,:);
+mag_earth=mag_earth(range,:);
+
+save_file_name_mat='data/Flight8_0909/Flight8_0909_crop.mat';
+save(save_file_name_mat,"data_gnss","data_mag13_sync","data_ins_sync","igrf_down","igrf_east","igrf_north","mag_earth");
 
 
 %% save data
     
 % save data to file;
-save_file_name='data/Flight8_0909.txt';
+save_file_name='data/Flight8_0909/Flight8_0909.txt';
 fileID = fopen(save_file_name, 'w');
 if fileID == -1
     error('cannot open file!');
 end
-for j=1:size(tt,1)
+for j=1:size(data_gnss,1)
     fprintf(fileID,'%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n', ...
-        tt(j),mag_op(j),mag_flux_x(j),mag_flux_y(j),mag_flux_z(j),...
-        mag_op_truth(j),igrf_north(j),igrf_east(j),igrf_down(j),...
-        ins_pitch(j),ins_roll(j),ins_yaw(j));
+        data_gnss(j,1),data_mag13_sync(j,5),data_mag13_sync(j,2),data_mag13_sync(j,3),data_mag13_sync(j,4),...
+        mag_earth(j),igrf_north(j),igrf_east(j),igrf_down(j),...
+        data_ins_sync(j,2),data_ins_sync(j,3),data_ins_sync(j,4));
 end
 fclose(fileID);
 
 % save info to file;
-save_info_file_name='data/Flight8_0909_info.txt';
+save_info_file_name='data/Flight8_0909/Flight8_0909_info.txt';
 fileID = fopen(save_info_file_name, 'w');
 if fileID == -1
     error('cannot open file!');
@@ -150,14 +190,3 @@ end
 %     fprintf(fileID,'mag_earth_intensity = %f\n',mag_earth_intensity);
 fprintf(fileID,'saved data field: \n time, mag_op, flux_xyz, mag_op_truth, igrf_ned, ins_pry \n');
 fclose(fileID);
-
-% show flight trajectory on anomaly map;
-img_traj=showAnomalyMapTraj(anomaly_map_filename,map_idx_x,map_idx_y,save_file_name);
-% end
-
-%%
-fprintf('\n平均飞行高度（气压计）： '); disp(mean(baro));
-
-save_file_name_mat=['data/',cell_str{1,1},'_',num2str(lines{i}),'.mat'];
-save(save_file_name_mat,"tt","lat","lon","baro","igrf_down","igrf_east","igrf_north","ins_yaw","ins_roll","ins_pitch");
-
