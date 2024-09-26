@@ -6,44 +6,13 @@ addpath('.\src')
 addpath('.\data')
 addpath('.\m_IGRF')
 
-% data_original_filename = 'Flt1002_train.h5';
-% time = datenum([2020 6 20]);
-% lines={1002.02,1002.20,1002.14,1002.16,1002.17};
+folder='.\data\Flight8_0909\model_square\';
+load_file_name='.\data\Flight8_0909\model_square\Flight8_0909.txt';
 
-% data_original_filename = 'Flt1003_train.h5';
-% time = datenum([2020 6 29]); 
-% lines={1003.02,1003.04,1003.08};
+% folder='.\data\Flight1_0814\';
+% load_file_name='.\data\Flight1_0814\Flight1_0814.txt';
 
-% data_original_filename = 'Flt1006_train.h5';
-% time = datenum([2020 7 6]); 
-% lines={1006.04,1006.06,1006.08};
-
-% data_original_filename = 'Flt1007_train.h5';
-% time = datenum([2020 7 7]); 
-% lines={1007.02,1007.06};
-
-% i = 4 ;
-folder='.\data\Flight8_0909\';
-
-
-% cell_str=strsplit(data_original_filename,'_');
-% load_info_file_name=[cell_str{1,1},'_',num2str(lines{i}),'_info.txt'];
-load_file_name='data/Flight8_0909/Flight8_0909.txt';
-
-% time_in=[2024 7 29];
-% tt=datetime(time_in);
-% time_str=datestr(tt,'yyyy-mm-dd');
-% load_file_name=['data/data_',time_str,'.txt'];
-% load_info_file_name=['data/data_',time_str,'_info.txt'];
-
-%% for i=1:size(lines,2)
-% i=1;
-
-% load data info
-% fileID = fopen(load_info_file_name, 'r');
-% mag_earth_intensity = fscanf(fileID, 'mag_earth_intensity = %f\n', 1);
-% fclose(fileID);
-% fprintf('mag_earth_intensity = %.6f\n', mag_earth_intensity);
+%% 
 
 % load model 
 D_tilde_inv=load([folder,'D_tilde_inv.txt']);
@@ -124,23 +93,16 @@ legend('地磁场矢量方向','补偿磁场矢量方向','单位球面', 'FontS
 % plotResults(x_b,y_b,z_b,x_hat1,y_hat1,z_hat1,mag_earth_intensity);
 
 %%
-figure('Position',[100,100,1000,600]);
-
-fontsize=20;
-% subplot(1,3,1);
-% plot(res_m1,'r'); hold on;
-% plot(res_hat1*0.2,'b'); hold on;
-% subplot(1,3,2);
-% plot(res_m2,'r'); hold on;
-% plot(res_hat2*0.2,'b'); hold on;
-% subplot(1,3,3);
-plot(tt,res_m3,'r'); hold on;
-plot(tt,res_hat3,'b'); hold on;
-grid on;
-xlabel('时间[s]','FontSize',fontsize); 
-ylabel('磁场强度[nT]','FontSize',fontsize); 
-set(gca,'FontSize',fontsize);
-legend('测量误差','补偿误差', 'FontSize', fontsize);
+% figure('Position',[100,100,1000,600]);
+% 
+% fontsize=20;
+% plot(tt,res_m3,'r'); hold on;
+% plot(tt,res_hat3,'b'); hold on;
+% grid on;
+% xlabel('时间[s]','FontSize',fontsize); 
+% ylabel('磁场强度[nT]','FontSize',fontsize); 
+% set(gca,'FontSize',fontsize);
+% legend('测量误差','补偿误差', 'FontSize', fontsize);
 
 %% 
 
@@ -176,6 +138,7 @@ delta_z_c(delta_z_c < -1000) = 0;
 res_m3(res_hat3 < -1000) = 0;
 
 figure('WindowState', 'maximized');
+fontsize=20;
 
 subplot(2,2,1);
 plot(tt,delta_x,'-','DisplayName','测量误差','LineWidth',1); hold on;

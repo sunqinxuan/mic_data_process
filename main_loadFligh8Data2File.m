@@ -76,18 +76,15 @@ end
 mag_earth_intensity=mean(mag_earth);
 fprintf('mag_earth_intensity ='); disp(mag_earth_intensity);
 
-%% time synchronization
-
-
-% 先根据飞行记录，滤掉前后无用数据
-% 再用下面提供的插值方法，进行时间对齐 
+%% 
 
 figure;
-plot(data_mag13(:,1),data_mag13(:,5),'r'); hold on;
-plot(data_ins(:,1),data_ins(:,4),'g'); hold on;
-plot(data_gnss(:,1),data_gnss(:,4),'b'); hold on;
+plot(data_mag13(:,1),data_mag13(:,5),'DisplayName', 'mag13 intensity', 'LineWidth', 1); hold on;
+plot(data_ins(:,1),data_ins(:,4),'DisplayName', 'INS yaw', 'LineWidth', 1); hold on;
+plot(data_gnss(:,1),data_gnss(:,4),'DisplayName', 'GNSS altitude', 'LineWidth', 1); hold on;
+legend;
 
-%%
+%% time synchronization
 
 tt_mag13=data_mag13(:,1);
 tt_ins=data_ins(:,1);
@@ -110,13 +107,6 @@ end
 
 
 %%
-
-% show flight trajectory on anomaly map;
-% img_traj=showAnomalyMapTraj(anomaly_map_filename,map_idx_x,map_idx_y,save_file_name);
-% end
-
-
-% fprintf('\n平均飞行高度（气压计）： '); disp(mean(baro));
 
 save_file_name_mat='data/Flight8_0909/Flight8_0909.mat';
 save(save_file_name_mat,"data_gnss","data_mag13_sync","data_ins_sync","igrf_down","igrf_east","igrf_north","mag_earth");
@@ -149,7 +139,7 @@ title('Syncronization of INS Data to GNSS Time Points');
 grid on;
 hold off;
 
-%%
+%% flight data at 3000m altitude
 
 range=33746:95655;
 
@@ -161,7 +151,31 @@ igrf_east=igrf_east(range,:);
 igrf_north=igrf_north(range,:);
 mag_earth=mag_earth(range,:);
 
-save_file_name_mat='data/Flight8_0909/Flight8_0909_crop.mat';
+save_file_name_mat='data/Flight8_0909/Flight8_0909_3000m.mat';
+save(save_file_name_mat,"data_gnss","data_mag13_sync","data_ins_sync","igrf_down","igrf_east","igrf_north","mag_earth");
+
+%% data during the calibration flight (square flight)
+
+% 6:45:45  进入第一圈磁干扰补偿测试区（从西向东进入，高程3000-3020米）
+% 6:57:00  进入第二圈磁干扰补偿测试区
+% 7:08:02  退出，准备返航
+t1=time2second(6,40,0);
+t2=time2second(7,10,0);
+r1=findIdx(tt_gnss,t1);
+r2=findIdx(tt_gnss,t2);
+
+range=r1:r2;
+% range=78811:96811;
+
+data_gnss=data_gnss(range,:);
+data_ins_sync=data_ins_sync(range,:);
+data_mag13_sync=data_mag13_sync(range,:);
+igrf_down=igrf_down(range,:);
+igrf_east=igrf_east(range,:);
+igrf_north=igrf_north(range,:);
+mag_earth=mag_earth(range,:);
+
+save_file_name_mat='data/Flight8_0909/Flight8_0909_square.mat';
 save(save_file_name_mat,"data_gnss","data_mag13_sync","data_ins_sync","igrf_down","igrf_east","igrf_north","mag_earth");
 
 
