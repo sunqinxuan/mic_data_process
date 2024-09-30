@@ -6,11 +6,11 @@ addpath('.\src')
 addpath('.\data')
 addpath('.\m_IGRF')
 
-folder='.\data\Flight8_0909\model_square\';
-load_file_name='.\data\Flight8_0909\model_square\Flight8_0909.txt';
+folder='.\data\Flight8_0909\';
+load_file_name='.\data\Flight8_0909\Flight8_0909_cabin.txt';
 
 % folder='.\data\Flight1_0814\';
-% load_file_name='.\data\Flight1_0814\Flight1_0814.txt';
+% load_file_name='.\data\Flight1_0814\Flight1_0814_cabin.txt';
 
 %% 
 
@@ -33,27 +33,31 @@ x_n=data(:,7);
 y_n=data(:,8);
 z_n=data(:,9);
 
-ins_pitch=data(:,10);
-ins_roll=data(:,11);
-ins_yaw=data(:,12);
+x_b=x_n;
+y_b=y_n;
+z_b=z_n;
 
-x_b = zeros(length(x_m),1); 
-y_b = zeros(length(x_m),1); 
-z_b = zeros(length(x_m),1);
-R_NE= [0,1,0;1,0,0;0,0,-1]; % from ENU to NED;
-s=pi/180.0;
-for k=1:size(x_m,1)
-    R_nb=R_NE*euler2dcm(ins_roll(k),ins_pitch(k),ins_yaw(k),'ZXY');
-%     R_bn=R_NE*angle2dcm(ins_yaw(k)*s,ins_pitch(k)*s,ins_roll(k)*s,'ZXY');
-%     R_bn=angle2dcm(ins_yaw(k)*s,ins_pitch(k)*s,ins_roll(k)*s,'XZY');
-    h_n=[x_n(k);y_n(k);z_n(k)];
-    h_b=R_nb'*h_n;
-%     h_b=R_bn*h_n;
-%     h_b=h_n;
-    x_b(k)=h_b(1);
-    y_b(k)=h_b(2);
-    z_b(k)=h_b(3);
-end
+% ins_pitch=data(:,10);
+% ins_roll=data(:,11);
+% ins_yaw=data(:,12);
+
+% x_b = zeros(length(x_m),1); 
+% y_b = zeros(length(x_m),1); 
+% z_b = zeros(length(x_m),1);
+% R_NE= [0,1,0;1,0,0;0,0,-1]; % from ENU to NED;
+% s=pi/180.0;
+% for k=1:size(x_m,1)
+%     R_nb=R_NE*euler2dcm(ins_roll(k),ins_pitch(k),ins_yaw(k),'ZXY');
+% %     R_bn=R_NE*angle2dcm(ins_yaw(k)*s,ins_pitch(k)*s,ins_roll(k)*s,'ZXY');
+% %     R_bn=angle2dcm(ins_yaw(k)*s,ins_pitch(k)*s,ins_roll(k)*s,'XZY');
+%     h_n=[x_n(k);y_n(k);z_n(k)];
+%     h_b=R_nb'*h_n;
+% %     h_b=R_bn*h_n;
+% %     h_b=h_n;
+%     x_b(k)=h_b(1);
+%     y_b(k)=h_b(2);
+%     z_b(k)=h_b(3);
+% end
 
 mag_earth_intensity=mean(mag_n);
 % fprintf('mag_earth_intensity = %.6f\n', mag_earth_intensity);
@@ -128,14 +132,14 @@ rmse_mag_comp=sqrt(abs(mean(res_hat3.*res_hat3)))
 % rmse_mag_comp=abs(mean(res_hat3))
 
 scale=1;
-delta_x_c(delta_x_c > 1000) = 0;
-delta_y_c(delta_y_c > 1000) = 0;
-delta_z_c(delta_z_c > 1000) = 0;
-res_m3(res_hat3 > 1000) = 0;
-delta_x_c(delta_x_c < -1000) = 0;
-delta_y_c(delta_y_c < -1000) = 0;
-delta_z_c(delta_z_c < -1000) = 0;
-res_m3(res_hat3 < -1000) = 0;
+% delta_x_c(delta_x_c > 1000) = 0;
+% delta_y_c(delta_y_c > 1000) = 0;
+% delta_z_c(delta_z_c > 1000) = 0;
+% res_m3(res_hat3 > 1000) = 0;
+% delta_x_c(delta_x_c < -1000) = 0;
+% delta_y_c(delta_y_c < -1000) = 0;
+% delta_z_c(delta_z_c < -1000) = 0;
+% res_m3(res_hat3 < -1000) = 0;
 
 figure('WindowState', 'maximized');
 fontsize=20;

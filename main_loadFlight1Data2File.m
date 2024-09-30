@@ -138,6 +138,68 @@ title('Syncronization of INS Data to GNSS Time Points');
 grid on;
 hold off;
 
+%% 
+% filename = '.\data\Flight1_0814\06_mag13\Flt1_mag13_calib.txt';
+% fileID = fopen(filename, 'r');
+% data = textscan(fileID, '%s %f %f %f %f %f %f %f %f', 'Delimiter', ',');
+% fclose(fileID);
+% 
+% tt_str = data{1};
+% tt = datetime(tt_str, 'InputFormat', 'yyyy-MM-dd HH:mm:ss.SSSSSS');
+% [h,m,s] = hms(tt);
+% timestamp= h.*3600+m.*60+s;
+% 
+% mag_x=data{6}; % deg
+% mag_y=data{7};
+% mag_z=data{8};
+% mag_t=data{9};
+% 
+% data_mag13_calib=[timestamp,mag_x,mag_y,mag_z,mag_t];
+% 
+% figure;
+% hold on;
+% plot(tt_gnss, data_mag13_sync(:,2), '-', 'DisplayName', 'x', 'LineWidth', 1);
+% plot(timestamp, mag_x, '-', 'DisplayName', 'mag_x', 'LineWidth', 1);
+% legend show;
+% xlabel('Time (s)');
+% ylabel('Data Value');
+% title('Syncronization of INS Data to GNSS Time Points');
+% grid on;
+% hold off;
+% 
+% figure;
+% hold on;
+% plot(tt_gnss, data_mag13_sync(:,3), '-', 'DisplayName', 'y', 'LineWidth', 1);
+% plot(timestamp, mag_y, '-', 'DisplayName', 'mag_y', 'LineWidth', 1);
+% legend show;
+% xlabel('Time (s)');
+% ylabel('Data Value');
+% title('Syncronization of INS Data to GNSS Time Points');
+% grid on;
+% hold off;
+% 
+% figure;
+% hold on;
+% plot(tt_gnss, data_mag13_sync(:,4), '-', 'DisplayName', 'z', 'LineWidth', 1);
+% plot(timestamp, mag_z, '-', 'DisplayName', 'mag_z', 'LineWidth', 1);
+% legend show;
+% xlabel('Time (s)');
+% ylabel('Data Value');
+% title('Syncronization of INS Data to GNSS Time Points');
+% grid on;
+% hold off;
+% 
+% figure;
+% hold on;
+% plot(tt_gnss, data_mag13_sync(:,5), '-', 'DisplayName', 't', 'LineWidth', 1);
+% plot(timestamp, mag_t, '-', 'DisplayName', 'mag_t', 'LineWidth', 1);
+% legend show;
+% xlabel('Time (s)');
+% ylabel('Data Value');
+% title('Syncronization of INS Data to GNSS Time Points');
+% grid on;
+% hold off;
+
 %% data during the calibration flight (square flight)
 
 % 17:03  高度3000m  61380

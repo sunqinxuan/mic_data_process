@@ -23,10 +23,10 @@ lines={1002.02,1002.20,1002.14,1002.16,1002.17};
 % lines={1007.02,1007.06};
 
 i = 1;
-folder='.\data\sim_model_1002_02\';
+folder='.\data\MIT\sim_model_1002_02\';
 
 cell_str=strsplit(data_original_filename,'_');
-load_file_name=['data/',cell_str{1,1},'_',num2str(lines{i}),'.mat'];
+load_file_name=['data/MIT/',cell_str{1,1},'_',num2str(lines{i}),'.mat'];
 
 load(load_file_name);
 
@@ -54,7 +54,7 @@ mag_measure_body=zeros(N,4);
 mag_truth_body=zeros(N,4);
 mag_comp_body=zeros(N,4);
 for k=1:N
-    R_nb=euler2dcm(ins_roll(k),ins_pitch(k),ins_yaw(k));
+    R_nb=euler2dcm(ins_roll(k),ins_pitch(k),ins_yaw(k),'ZYX');
     B_n=[igrf_north(k);igrf_east(k);igrf_down(k)];
     noise = normrnd(0, 1, [3, 1]);
     % in mag frame;
@@ -70,6 +70,8 @@ for k=1:N
     B_comp_b=R_opt'*D_tilde_inv*(B_m-o_hat);
     mag_comp_body(k,:)=[B_comp_b',norm(B_comp_b)];
 end
+
+interactive_plot(tt,lon,lat,baro,mag_measure_body,mag_truth_body);
 
 % rmse_x=rmse(mag_truth_body(:,1),mag_measure_body(:,1))
 % rmse_y=rmse(mag_truth_body(:,2),mag_measure_body(:,2))
@@ -145,7 +147,7 @@ grid on;
 
 %%
 % save data to file;
-save_file_name=['data/sim_',cell_str{1,1},'_',num2str(lines{i}),'.txt'];
+save_file_name=['data/MIT/sim_',cell_str{1,1},'_',num2str(lines{i}),'.txt'];
 fileID = fopen(save_file_name, 'w');
 if fileID == -1
     error('cannot open file!');
@@ -180,12 +182,12 @@ plot(tt,ins_yaw,'b'); hold on;
 grid on;
 
 %%
-figure;
-plot(tt,igrf_north,'r'); hold on;
-plot(tt,igrf_east,'g'); hold on;
-plot(tt,igrf_down,'b'); hold on;
-grid on;
-
-mag_earth_north=mean(igrf_north);
-mag_earth_east=mean(igrf_east);
-mag_earth_down=mean(igrf_down);
+% figure;
+% plot(tt,igrf_north,'r'); hold on;
+% plot(tt,igrf_east,'g'); hold on;
+% plot(tt,igrf_down,'b'); hold on;
+% grid on;
+% 
+% mag_earth_north=mean(igrf_north);
+% mag_earth_east=mean(igrf_east);
+% mag_earth_down=mean(igrf_down);
