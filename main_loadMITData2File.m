@@ -24,7 +24,9 @@ lines={1002.02,1002.20,1002.14,1002.16,1002.17};
 
 anomaly_map_filename='Canada_MAG_RES_200m.hdf5';
 
-i = 1;
+i = 3;
+
+cell_str=strsplit(data_original_filename,'_');
 
 %%
 % for i=1:size(lines,2)
@@ -70,9 +72,10 @@ i = 1;
     end
     mag_earth_intensity=mean(mag_earth);
     fprintf('mag_earth_intensity ='); disp(mag_earth_intensity);
+
+%%
     
     % save data to file;
-    cell_str=strsplit(data_original_filename,'_');
     save_file_name=['data/',cell_str{1,1},'_',num2str(lines{i}),'.txt'];
     fileID = fopen(save_file_name, 'w');
     if fileID == -1
@@ -103,6 +106,6 @@ i = 1;
 %%
 fprintf('\n平均飞行高度（气压计）： '); disp(mean(baro));
 
-save_file_name_mat=['data/',cell_str{1,1},'_',num2str(lines{i}),'.mat'];
+save_file_name_mat=['data/MIT/',cell_str{1,1},'_',num2str(lines{i}),'.mat'];
 save(save_file_name_mat,"tt","lat","lon","baro","igrf_down","igrf_east","igrf_north","ins_yaw","ins_roll","ins_pitch");
 

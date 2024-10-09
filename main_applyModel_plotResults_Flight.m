@@ -6,11 +6,11 @@ addpath('.\src')
 addpath('.\data')
 addpath('.\m_IGRF')
 
-folder='.\data\Flight8_0909\model_square\';
-load_file_name='.\data\Flight8_0909\model_square\Flight8_0909.txt';
+% folder='.\data\Flight8_0909\model_square\';
+% load_file_name='.\data\Flight8_0909\model_square\Flight8_0909.txt';
 
-% folder='.\data\Flight1_0814\';
-% load_file_name='.\data\Flight1_0814\Flight1_0814.txt';
+folder='.\data\Flight1_0814\model_ellipsoid\';
+load_file_name='.\data\Flight1_0814\model_ellipsoid\Flight1_0814.txt';
 
 %% 
 

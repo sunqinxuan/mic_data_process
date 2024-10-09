@@ -22,19 +22,19 @@ lines={1002.02,1002.20,1002.14,1002.16,1002.17};
 % time = datenum([2020 7 7]); 
 % lines={1007.02,1007.06};
 
-i = 1;
-folder='.\data\MIT\sim_model_1002_02\';
+i = 3;
 
 cell_str=strsplit(data_original_filename,'_');
 load_file_name=['data/MIT/',cell_str{1,1},'_',num2str(lines{i}),'.mat'];
-
 load(load_file_name);
 
-% load model 
+folder='.\data\MIT\sim_model_1002_02\';
+% load model (user-set)
 coeff_D=load([folder,'D.txt']);
 coeff_o=load([folder,'o.txt']);
 coeff_R_mb=load([folder,'R.txt']);
 
+% load model (calibrated)
 D_tilde_inv=load([folder,'D_tilde_inv.txt']);
 o_hat=load([folder,'o_hat.txt']);
 R_hat=load([folder,'R_hat.txt']);
@@ -71,7 +71,10 @@ for k=1:N
     mag_comp_body(k,:)=[B_comp_b',norm(B_comp_b)];
 end
 
-interactive_plot(tt,lon,lat,baro,mag_measure_body,mag_truth_body);
+
+
+
+%%
 
 % rmse_x=rmse(mag_truth_body(:,1),mag_measure_body(:,1))
 % rmse_y=rmse(mag_truth_body(:,2),mag_measure_body(:,2))
@@ -87,6 +90,7 @@ delta_x=(mag_truth_body(:,1)-mag_measure_body(:,1))*0.5;
 delta_y=(mag_truth_body(:,2)-mag_measure_body(:,2))*0.5;
 delta_z=(mag_truth_body(:,3)-mag_measure_body(:,3))*0.5;
 delta_m=(mag_truth_body(:,4)-mag_measure_body(:,4));
+delta=[delta_x,delta_y,delta_z,delta_m];
 
 rmse_x=abs(mean(delta_x))
 rmse_y=abs(mean(delta_y))
@@ -97,11 +101,18 @@ delta_x_c=(mag_truth_body(:,1)-mag_comp_body(:,1))*0.5;
 delta_y_c=(mag_truth_body(:,2)-mag_comp_body(:,2))*0.5;
 delta_z_c=(mag_truth_body(:,3)-mag_comp_body(:,3))*0.5;
 delta_m_c=(mag_truth_body(:,4)-mag_comp_body(:,4));
+delta_comp=[delta_x_c,delta_y_c,delta_z_c,delta_m_c];
 
 rmse_x_comp=abs(mean(delta_x_c))
 rmse_y_comp=abs(mean(delta_y_c))
 rmse_z_comp=abs(mean(delta_z_c))
 rmse_mag_comp=abs(mean(delta_m_c))
+
+%% recording - compensation results
+
+sim_compensate_1002_02(tt,lon,lat,baro,mag_measure_body,mag_truth_body,mag_comp_body,delta,delta_comp);
+
+%%
 
 figure;
 subplot(2,2,1);
@@ -146,23 +157,22 @@ ylabel('补偿误差/nT');
 grid on;
 
 %%
-% save data to file;
-save_file_name=['data/MIT/sim_',cell_str{1,1},'_',num2str(lines{i}),'.txt'];
-fileID = fopen(save_file_name, 'w');
-if fileID == -1
-    error('cannot open file!');
-end
-for j=1:size(tt,1)
-    fprintf(fileID,'%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n', ...
-        tt(j),mag_measure(j,4),mag_measure(j,1),mag_measure(j,2),mag_measure(j,3),...
-        mag_truth_body(j,4),igrf_north(j),igrf_east(j),igrf_down(j),...
-        ins_pitch(j),ins_roll(j),ins_yaw(j));
-end
-fclose(fileID);
+% save simulated measurement data to file;
+% save_file_name=[folder,'sim_',cell_str{1,1},'_',num2str(lines{i}),'.txt'];
+% fileID = fopen(save_file_name, 'w');
+% if fileID == -1
+%     error('cannot open file!');
+% end
+% for j=1:size(tt,1)
+%     fprintf(fileID,'%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n', ...
+%         tt(j),mag_measure(j,4),mag_measure(j,1),mag_measure(j,2),mag_measure(j,3),...
+%         mag_truth_body(j,4),igrf_north(j),igrf_east(j),igrf_down(j),...
+%         ins_pitch(j),ins_roll(j),ins_yaw(j));
+% end
+% fclose(fileID);
 
 
 %%
-
 
 figure;
 plot3(lon,lat,baro); hold on;
@@ -170,14 +180,13 @@ grid on;
 xlabel('经度/deg');
 ylabel('纬度/deg');
 zlabel('高度/m');
+zlim([0 500]);
 
 %%
-% addpath('./psins/');
-% yaw=yawplot(ins_yaw);
+
 figure;
 plot(tt,ins_pitch,'r'); hold on;
 plot(tt,ins_roll,'g'); hold on;
-% figure;
 plot(tt,ins_yaw,'b'); hold on;
 grid on;
 
